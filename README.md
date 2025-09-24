@@ -1,102 +1,132 @@
-# 🚗 Gestão de Frota API
+# Gestão de Frota - Challenge Java 2025 Sprint 3
 
-API de Gestão de Frotas. Projeto desenvolvido com **Spring Boot** usando boas práticas de arquitetura REST, DTOs, mapeadores, cache, paginação e banco de dados **H2 em memória**.
+**Grupo:** LTAKN
 
----
-
-## 📦 Tecnologias utilizadas
-
-- ✅ Java 21
-- ✅ Spring Boot 3.4.5
-- ✅ Spring Data JPA
-- ✅ Spring Web
-- ✅ Banco de dados H2 (em memória)
-- ✅ Hibernate Validator
-- ✅ Maven
-- ✅ Cache com `@Cacheable`
-- ✅ DTO + Entity + Mapper
-- ✅ Paginação com `Pageable`
+* Enzo Prado Soddano — RM557937
+* Lucas Resende Lima — RM556564
+* Vinícius Prates Altafini — RM559183
 
 ---
 
-## 🧱 Estrutura da API
+## 📌 Descrição
 
-A API está dividida em dois recursos principais:
+Este projeto contém a terceira sprint do **Challenge 2025** da disciplina de Java Advanced.
+Ele consiste em uma aplicação de **Gestão de Frota** que permite cadastrar, listar, atualizar e deletar motos, pátios e usuários através de interface web, além de fornecer endpoints REST.
 
-### 🏍️ Motos (`/motos`)
-- **GET** `/motos`: Lista todas as motos com paginação e filtro por placa.
-- **POST** `/motos`: Cadastra uma nova moto.
-- **PUT** `/motos/{id}`: Atualiza uma moto existente.
-- **DELETE** `/motos/{id}`: Remove uma moto pelo ID.
+O projeto utiliza:
 
-### 🅿️ Pátios (`/patios`)
-- **GET** `/patios`: Lista todos os pátios.
-- **POST** `/patios`: Cadastra um novo pátio.
-- **PUT** `/patios/{id}`: Atualiza um pátio existente.
-- **DELETE** `/patios/{id}`: Remove um pátio pelo ID.
+* Interface web com **Spring MVC + Thymeleaf**
+* CRUD completo de Motos, Pátios e Usuários
+* Segurança com **Spring Security**
+* Persistência com **Spring Data JPA** e **Oracle Database**
+* Migrations automatizadas com **Flyway**
+* Estilização com Bootstrap + CSS customizado
 
 ---
 
-## 🗃️ Banco de dados H2
+## 🛠️ Tecnologias
 
-- A aplicação utiliza banco de dados em memória (H2).
-- A tabela é criada automaticamente pelo JPA.
-- Dados iniciais podem ser inseridos automaticamente com o arquivo `import.sql`.
-
-### 🛠️ Inserindo dados automaticamente
-
-Crie o arquivo `src/main/resources/import.sql` com dados como:
-
-```sql
-INSERT INTO patio (nome, endereco, telefone) VALUES ('Pátio Butantã', 'Av. Valdemar Ferreira, 136 – Butantã, São Paulo – SP, 05501-010', 1131818188);
-INSERT INTO patio (nome, endereco, telefone) VALUES ('Pátio Limão', 'Av. Prof. Celestino Bourroul, 363 – Limão, São Paulo – SP, 02710-000', 1131818188);
-
-INSERT INTO moto (marca, modelo, placa, ano, numero_iot, patio_id) VALUES ('HONDA', 'POP', 'TMJ9E65', 2025, 98527, 1);
-INSERT INTO moto (marca, modelo, placa, ano, numero_iot, patio_id) VALUES ('TVS', 'SPORT', 'SVS8H56', 2024, 91452, 2);
-INSERT INTO moto (marca, modelo, placa, ano, numero_iot, patio_id) VALUES ('HONDA', 'POP', 'SUY1I63', 2023, 79636, 1);
-INSERT INTO moto (marca, modelo, placa, ano, numero_iot, patio_id) VALUES ('TVS', 'SPORT', 'SWO7J61', 2024, 88320, 2);
-INSERT INTO moto (marca, modelo, placa, ano, numero_iot, patio_id) VALUES ('VMOTO', 'VS1', 'SWM8B74', 2024, 89041, 1);
-```
+* **Java 21**
+* **Spring Boot 3**
+* **Spring MVC + Thymeleaf**
+* **Spring Data JPA**
+* **Spring Security**
+* **Flyway**
+* **Maven**
+* **Oracle Database**
+* **Bootstrap + CSS customizado**
+* **Lombok**
 
 ---
 
-## 🔎 Acessando o H2 Console
-
-- 🌐 URL: http://localhost:8080/h2-console
-- JDBC URL: `jdbc:h2:mem:gestaofrota`
-- User: `sa`
-- Password: *(deixe em branco)*
-
----
-
-## 🚀 Como executar o projeto
+## ⚙️ Como rodar localmente
 
 1. Clone o repositório:
-- `git clone https://github.com/olucso/challenge-sprint-1-java-advanced.git`
-- `cd gestao-frota`
+   ```
+   git clone [https://github.com/DerBrasilianer/Challenge\_Java\_2025\_Sprint3.git](https://github.com/DerBrasilianer/Challenge_Java_2025_Sprint3.git)
+   cd Challenge\_Java\_2025\_Sprint3/challenge-sprint-1-java-advanced-main
+   ```
 
-2. Compile e rode o projeto:
-- `./mvnw spring-boot:run`
+2. Abra o projeto no **IntelliJ** (ou outra IDE compatível com Java 21).
 
-3. Acesse os endpoints via Postman ou navegador:
-- `http://localhost:8080/motos`
-- `http://localhost:8080/patios`
+3. Configure o banco Oracle no `application.properties` com usuário, senha e URL corretos.
 
----
+4. Rode a aplicação a partir da classe principal:
+   ""
+   com.fiap.gestaofrota.GestaoFrotaApplication
+   ""
 
-## 📖 Boas práticas aplicadas
-
-- ✅ Separação clara entre `Entity`, `DTO`, `Mapper` e `Service`
-- ✅ Uso de `@Valid` para validações de entrada
-- ✅ Lógica de atualização segura com `findById` + `save`
-- ✅ Mensagens de erro claras com `EntityNotFoundException`
-- ✅ Cache com `@Cacheable` no serviço de listagem
-- ✅ Paginação e filtros por query
+5. A aplicação ficará disponível em:
+   [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 👨‍💻 Autores
-Desenvolvido pelo grupo LTAKN:
-- RM: 557937  –  Enzo Prado Soddano
-- RM: 556564  –  Lucas Resende Lima
-- RM: 559183  –  Vinicius Prates Altafini
+## 👀 Funcionalidades
+
+* **CRUD de Motos:**
+
+    * Criar, listar, editar e deletar motos
+    * Cada moto está associada a um Pátio
+
+* **CRUD de Pátios:**
+
+    * Criar, listar, editar e deletar pátios
+    * Um pátio pode ter várias motos
+
+* **CRUD de Usuários:**
+
+    * Registro de novos usuários
+    * Login e logout
+    * Validação de username único
+
+* **Interface web:**
+
+    * Templates Thymeleaf estilizados com Bootstrap e CSS
+    * Barra de navegação com login/logout
+
+* **API REST:**
+
+    * Endpoints para Motos (`/api/motos`)
+    * Endpoints para Pátios (`/api/patios`)
+    * Endpoints para Usuários via registro/login
+
+* **Segurança:**
+
+    * Login e registro de usuários
+    * Logout seguro
+    * Controle de acesso com roles
+
+* **Banco de dados:**
+
+    * Oracle DB com migrations Flyway
+
+---
+
+## 📸 Prints de tela
+
+* Página inicial
+  ![home](src/main/resources/static/prints/home.png)
+
+* Formulário de Cadastro
+  ![register](src/main/resources/static/prints/cadastro.png)
+
+* Formulário de Login
+![register](src/main/resources/static/prints/login.png)
+
+* Listagem de Pátios
+  ![patios-list](src/main/resources/static/prints/patios_list.png)
+
+* Cadastro de Pátio
+  ![patios-form](src/main/resources/static/prints/patios_form.png)
+
+* Listagem de Motos
+  ![patios-list](src/main/resources/static/prints/motos_list.png)
+
+* Cadastro de Moto
+  ![patios-form](src/main/resources/static/prints/motos_form.png)
+
+---
+
+## 📽️ Vídeo de demonstração
+
+[Adicionar link do vídeo aqui]
