@@ -39,6 +39,7 @@ public class UserService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role(Role.USER)
                 .build();
+
         return userRepository.save(user);
 
     }

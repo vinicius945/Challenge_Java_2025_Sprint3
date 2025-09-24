@@ -25,26 +25,34 @@ public class MotoWebController {
     private final PatioService patioService;
 
     public MotoWebController(MotoService motoService, PatioService patioService) {
+
         this.motoService = motoService;
         this.patioService = patioService;
+
     }
 
     @GetMapping
     public String listar(@RequestParam(required = false) String placa, Model model) {
+
         var page = motoService.listar(Pageable.unpaged(), placa);
         List<MotoDTO> motos = page.getContent().stream().map(MotoMapper::toMotoDTO).toList();
         model.addAttribute("motos", motos);
         model.addAttribute("placa", placa);
+
         return "motos/list";
+
     }
 
     @GetMapping("/novo")
     public String novo(Model model) {
+
         model.addAttribute("moto", new MotoDTO());
         model.addAttribute("patios", patioService.listarTodos());
         model.addAttribute("marcas", Marcas.values());
         model.addAttribute("modelos", Modelos.values());
+
         return "motos/form";
+
     }
 
     @PostMapping("/salvar")
@@ -53,39 +61,53 @@ public class MotoWebController {
                          Model model) {
 
         if (result.hasErrors()) {
+
             model.addAttribute("patios", patioService.listarTodos());
             model.addAttribute("marcas", Marcas.values());
             model.addAttribute("modelos", Modelos.values());
+
             return "motos/form";
+
         }
 
         PatioEntity patio = patioService.buscarPorId(moto.getPatioId());
         MotoEntity entity = MotoMapper.toMotoEntity(moto, patio);
 
         if (moto.getId() == null) {
+
             motoService.criar(entity);
+
         } else {
+
             motoService.atualizar(moto.getId(), entity);
+
         }
 
         return "redirect:/motos";
+
     }
 
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model) {
+
         MotoEntity entity = motoService.buscarPorId(id);
         MotoDTO dto = MotoMapper.toMotoDTO(entity);
         model.addAttribute("moto", dto);
         model.addAttribute("patios", patioService.listarTodos());
         model.addAttribute("marcas", Marcas.values());
         model.addAttribute("modelos", Modelos.values());
+
         return "motos/form";
+
     }
 
     @PostMapping("/{id}/deletar")
     public String deletar(@PathVariable Long id) {
+
         motoService.deletar(id);
+
         return "redirect:/motos";
+
     }
 
 }

@@ -27,7 +27,7 @@ public class MotoDTO {
     @NotNull
     private Long patioId;
 
-    private String patioNome; // <-- adicionado
+    private String patioNome;
 
     public Long getId() {
         return id;

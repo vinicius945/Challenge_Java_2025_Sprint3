@@ -7,6 +7,7 @@ import com.fiap.gestaofrota.entity.PatioEntity;
 public class MotoMapper {
 
     public static MotoDTO toMotoDTO(MotoEntity entity) {
+
         if (entity == null) return null;
 
         MotoDTO dto = new MotoDTO();
@@ -18,14 +19,18 @@ public class MotoMapper {
         dto.setNumeroIot(entity.getNumeroIot());
 
         if (entity.getPatio() != null) {
+
             dto.setPatioId(entity.getPatio().getId());
             dto.setPatioNome(entity.getPatio().getNome());
+
         }
 
         return dto;
+
     }
 
     public static MotoEntity toMotoEntity(MotoDTO dto, PatioEntity patio) {
+
         if (dto == null) return null;
 
         MotoEntity entity = new MotoEntity();
@@ -38,5 +43,6 @@ public class MotoMapper {
         entity.setPatio(patio);
 
         return entity;
+
     }
 }
