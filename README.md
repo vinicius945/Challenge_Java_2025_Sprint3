@@ -61,6 +61,13 @@ O projeto utiliza:
 
 ---
 
+## 🛠️ Usuários para Teste
+
+* **user, userpass (usuário padrão)**
+* **admin, adminpass (usuário administrador)**
+
+---
+
 ## 👀 Funcionalidades
 
 * **CRUD de Motos:**
@@ -99,6 +106,12 @@ O projeto utiliza:
 * **Banco de dados:**
 
     * Oracle DB com migrations Flyway
+
+---
+
+## ⚙️ Deploy no Render
+
+### [Link do Deploy](https://challenge-java-2025-sprint3.onrender.com)
 
 ---
 
