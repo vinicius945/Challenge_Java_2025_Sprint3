@@ -3,6 +3,7 @@ package com.fiap.gestaofrota.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,17 +55,18 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http
-                .csrf(csrf -> csrf.disable()) // 🔹 desativa CSRF para permitir chamadas do mobile
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
-                        .defaultSuccessUrl("/", true) // redireciona para home.html
+                        .defaultSuccessUrl("/home", true)
                 )
+                .httpBasic(Customizer.withDefaults())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")
@@ -73,8 +75,8 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e.accessDeniedPage("/access-denied"));
 
         return http.build();
-
     }
+
 
     // Configuração de CORS
     @Bean
