@@ -12,6 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -48,28 +54,44 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
-                .anyRequest().authenticated()
-        );
-
-        http.formLogin(form -> form
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/", true)
-        );
-
-        http.httpBasic(Customizer.withDefaults())
-
+        http
+                .csrf(csrf -> csrf.disable()) // desativa CSRF para permitir requisições externas
+                .cors(Customizer.withDefaults()) // habilita CORS
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/", true)
+                )
+                .httpBasic(Customizer.withDefaults()) // 🔹 habilita Basic Auth para o mobile
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
-
                 .exceptionHandling(e -> e.accessDeniedPage("/access-denied"));
 
         return http.build();
+
+    }
+
+    // Configuração de CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
 
     }
 
