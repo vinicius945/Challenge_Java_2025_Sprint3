@@ -3,7 +3,6 @@ package com.fiap.gestaofrota.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,8 +54,8 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http
-                .csrf(csrf -> csrf.disable()) // desativa CSRF para permitir requisições externas
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔹 força usar nosso bean
+                .csrf(csrf -> csrf.disable()) // 🔹 desativa CSRF para permitir chamadas do mobile
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
@@ -64,9 +63,8 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/", true) // redireciona para home.html
                 )
-                .httpBasic(Customizer.withDefaults()) // 🔹 habilita Basic Auth para o mobile
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")
@@ -83,8 +81,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:19006", "*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:19006")); // Expo e Web
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
