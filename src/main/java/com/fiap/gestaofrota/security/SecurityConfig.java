@@ -56,7 +56,7 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable()) // desativa CSRF para permitir requisições externas
-                .cors(Customizer.withDefaults()) // habilita CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔹 força usar nosso bean
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
@@ -83,7 +83,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
+
+        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:19006", "*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
