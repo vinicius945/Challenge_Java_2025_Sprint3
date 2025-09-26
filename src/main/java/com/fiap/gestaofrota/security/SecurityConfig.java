@@ -55,7 +55,7 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
