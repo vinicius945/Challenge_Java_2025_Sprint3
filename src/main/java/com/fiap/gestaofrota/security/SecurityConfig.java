@@ -55,18 +55,19 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider());
 
         http
-                .csrf(Customizer.withDefaults())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**").permitAll()
+                        .requestMatchers("/api/**").authenticated() // ✅ API exige Basic Auth
                         .anyRequest().authenticated()
                 )
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
                         .defaultSuccessUrl("/home", true)
                 )
-                .httpBasic(Customizer.withDefaults())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout")
@@ -75,15 +76,14 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e.accessDeniedPage("/access-denied"));
 
         return http.build();
-    }
 
+    }
 
     // Configuração de CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:19006")); // Expo e Web
+        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:19006"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
