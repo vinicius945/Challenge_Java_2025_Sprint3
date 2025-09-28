@@ -33,7 +33,7 @@ O projeto utiliza:
 * **Spring Security**
 * **Flyway**
 * **Maven**
-* **Oracle Database**
+* **Azure SQL**
 * **Bootstrap + CSS customizado**
 * **Lombok**
 
