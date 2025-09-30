@@ -6,7 +6,7 @@ name: 'Build and deploy JAR app to Azure Web App: webapp-challenge-945-sprint3'
 on:
   push:
     branches:
-    - main
+      - main
   workflow_dispatch:
 
 jobs:
@@ -14,20 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up Java version
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v4
       with:
         java-version: '21'
+        distribution: 'temurin'
     
     - name: Build with Maven
       run: mvn clean install
 
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with: 
         app-name: 'webapp-challenge-945-sprint3'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_78106b4ed8aa46bcbdaf9a3fdac09bd5 }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_78106B4ED8AA46BCBDAF9A3FDAC09BD5 }}
         package: '${{ github.workspace }}/target/*.jar'
