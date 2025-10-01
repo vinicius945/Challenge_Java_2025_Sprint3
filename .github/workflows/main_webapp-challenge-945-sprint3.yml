@@ -28,6 +28,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: 'webapp-challenge-945-sprint3'
-        slot-name: 'production'
+        slot-name: ''
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_e8ec94d7242d4064adf78927d0c340c4 }}
         package: '${{ github.workspace }}/target/*.jar'
