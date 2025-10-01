@@ -1,4 +1,4 @@
-# Gestão de Frota - Challenge Java 2025 Sprint 3
+# Gestão de Frota - Challenge Java 2025 Sprint 
 
 **Grupo:** LTAKN
 * Enzo Prado Soddano — RM557937
