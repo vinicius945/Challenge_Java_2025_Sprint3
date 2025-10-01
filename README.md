@@ -20,40 +20,7 @@ O projeto utiliza:
 * Migrations automatizadas com **Flyway** para controle de versão do schema do banco de dados.
 * Deploy automatizado (CI/CD) com **GitHub Actions** para o **Azure App Service**.
 
----
-
-Script.sql
-
--- Cria a tabela de Usuários
-CREATE TABLE CH_TB_USER (
-    id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    username VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
-    role VARCHAR(50) NOT NULL
-);
-
--- Cria a tabela de Pátios
-CREATE TABLE CH_TB_PATIO (
-    id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    endereco VARCHAR(200) NOT NULL,
-    telefone VARCHAR(20) NOT NULL
-);
-
--- Cria a tabela de Motos e define a chave estrangeira para Pátio
-CREATE TABLE CH_TB_MOTO (
-    id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    marca VARCHAR(50) NOT NULL,
-    modelo VARCHAR(50) NOT NULL,
-    placa VARCHAR(10) NOT NULL UNIQUE,
-    ano INT NOT NULL,
-    numero_iot BIGINT NULL,
-    patio_id BIGINT NOT NULL,
-    CONSTRAINT FK_MOTO_PATIO FOREIGN KEY (patio_id) 
-        REFERENCES CH_TB_PATIO (id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
+----------
 
 
 ## 🛠️ Tecnologias
@@ -131,6 +98,107 @@ O comando a seguir, executado no Cloud Shell, cria todos os recursos necessário
 RESOURCE_GROUP="rg-challenge-sprint3"; LOCATION="eastus2"; SQL_SERVER_NAME="sqlserver-challenge-945-sprint3"; SQL_DATABASE_NAME="sqlLTAKN"; ADMIN_USER="leticia"; ADMIN_PASSWORD="AzureFest@2025"; APPSERVICE_PLAN_NAME="plan-challenge-sprint3"; WEBAPP_NAME="webapp-challenge-945-sprint3"; JAVA_RUNTIME="JAVA:21-java21"; echo "Criando grupo de recursos..." && az group create --name $RESOURCE_GROUP --location $LOCATION && echo "Criando servidor SQL..." && az sql server create --name $SQL_SERVER_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --admin-user $ADMIN_USER --admin-password $ADMIN_PASSWORD && echo "Configurando firewall do SQL..." && az sql server firewall-rule create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 && echo "Criando banco de dados..." && az sql db create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name $SQL_DATABASE_NAME --service-objective S0 && echo "Criando plano de serviço..." && az appservice plan create --name $APPSERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP --sku B1 --is-linux && echo "Criando Web App..." && az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --plan $APPSERVICE_PLAN_NAME --runtime $JAVA_RUNTIME && echo "🚀 Tudo pronto! Seus recursos foram criados em East US 2."
 
 ```
+Passo 2: Configuração das Variáveis de Ambiente no App Service
+Após a criação da infraestrutura, execute este comando no Cloud Shell para injetar as credenciais do banco de dados de forma segura no App Service.
+
+Bash
+
+az webapp config appsettings set \
+    --resource-group rg-challenge-sprint3 \
+    --name webapp-challenge-945-sprint3 \
+    --settings "SPRING_DATASOURCE_USERNAME=leticia@sqlserver-challenge-945-sprint3" "SPRING_DATASOURCE_PASSWORD=AzureFest@2025"
+Passo 3: Configuração e Ativação do Pipeline de CI/CD (Script Automatizado)
+Este passo é executado a partir do terminal local, na pasta do projeto. Ele utiliza um script para automatizar a criação da identidade de serviço no Azure, a configuração do segredo no GitHub e a geração do arquivo de workflow para o deploy.
+
+Pré-requisito: Você precisa ter o GitHub CLI instalado e autenticado (gh auth login).
+
+Crie o script setup-deploy.sh:
+Na raiz do seu projeto, crie um arquivo chamado setup-deploy.sh com o seguinte conteúdo:
+
+```bash
+
+#!/bin/bash
+
+APP_NAME="webapp-challenge-945-sprint3"
+RESOURCE_GROUP="rg-challenge-sprint3"
+REPO="vinicius945/Challenge_Java_2025_Sprint3"
+WORKFLOW_PATH=".github/workflows/deploy.yml"
+
+# 1. Criar Service Principal
+echo "🔐 Criando Service Principal..."
+az ad sp create-for-rbac \
+  --name "GitHub-Action-Deploy-Sprint3" \
+  --role "Contributor" \
+  --scopes "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Web/sites/$APP_NAME" \
+  --sdk-auth > azure-credentials.json
+
+# 2. Criar segredo no GitHub
+echo "🔑 Adicionando segredo AZURE_CREDENTIALS ao GitHub..."
+gh secret set AZURE_CREDENTIALS --repo "$REPO" < azure-credentials.json
+
+# 3. Apagar o JSON local
+rm azure-credentials.json
+
+# 4. Criar o arquivo de workflow
+echo "🛠️ Gerando workflow de deploy em $WORKFLOW_PATH..."
+mkdir -p .github/workflows
+
+cat > "$WORKFLOW_PATH" << 'EOF'
+name: Build and Deploy to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Java version
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Build with Maven
+      run: mvn clean install
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'webapp-challenge-945-sprint3'
+        package: '${{ github.workspace }}/target/*.jar'
+EOF
+
+# 5. Commit e push do workflow
+echo "🚀 Fazendo commit e push do workflow..."
+git add "$WORKFLOW_PATH"
+git commit -m "✨ Add GitHub Actions workflow for Azure deploy"
+git push origin main
+
+echo "✅ Tudo pronto! O deploy será disparado automaticamente via GitHub Actions."
+
+```
+Execute o script:
+
+
+
+chmod +x setup-deploy.sh
+./setup-deploy.sh
+
+A partir deste ponto, o workflow de CI/CD estará configurado e o primeiro deploy será iniciado.
+
 
 ###Arquitetura
 
