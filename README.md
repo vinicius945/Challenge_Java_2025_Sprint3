@@ -1,7 +1,6 @@
 # Gestão de Frota - Challenge Java 2025 Sprint 3
 
 **Grupo:** LTAKN
-
 * Enzo Prado Soddano — RM557937
 * Lucas Resende Lima — RM556564
 * Vinícius Prates Altafini — RM559183
@@ -10,17 +9,15 @@
 
 ## 📌 Descrição
 
-Este projeto contém a terceira sprint do **Challenge 2025** da disciplina de Java Advanced.
-Ele consiste em uma aplicação de **Gestão de Frota** que permite cadastrar, listar, atualizar e deletar motos, pátios e usuários através de interface web, além de fornecer endpoints REST.
+Este projeto contém a terceira sprint do **Challenge 2025** da disciplina de Java Advanced. Consiste em uma aplicação de **Gestão de Frota** que permite gerenciar motos, pátios e usuários. A aplicação foi desenvolvida com foco em boas práticas, segurança e deploy automatizado na nuvem.
 
 O projeto utiliza:
-
-* Interface web com **Spring MVC + Thymeleaf**
-* CRUD completo de Motos, Pátios e Usuários
-* Segurança com **Spring Security**
-* Persistência com **Spring Data JPA** e **Oracle Database**
-* Migrations automatizadas com **Flyway**
-* Estilização com Bootstrap + CSS customizado
+* Interface web com **Spring MVC + Thymeleaf**.
+* CRUD completo para as principais entidades do sistema.
+* Segurança com **Spring Security** para controle de acesso e autenticação.
+* Persistência com **Spring Data JPA** conectado a um banco de dados **Azure SQL**.
+* Migrations automatizadas com **Flyway** para controle de versão do schema do banco de dados.
+* Deploy automatizado (CI/CD) com **GitHub Actions** para o **Azure App Service**.
 
 ---
 
@@ -28,90 +25,76 @@ O projeto utiliza:
 
 * **Java 21**
 * **Spring Boot 3**
-* **Spring MVC + Thymeleaf**
-* **Spring Data JPA**
-* **Spring Security**
+* Spring MVC + Thymeleaf
+* Spring Data JPA
+* Spring Security
 * **Flyway**
-* **Maven**
-* **Azure SQL**
-* **Bootstrap + CSS customizado**
-* **Lombok**
+* Maven
+* **Azure SQL** (Banco de Dados em Nuvem)
+* **Azure App Service** (Hospedagem em Nuvem)
+* **GitHub Actions** (CI/CD)
+* Bootstrap + CSS customizado
+* Lombok
 
 ---
 
-## ⚙️ Como rodar localmente
+## ☁️ Deploy e Acesso em Nuvem
 
-1. Clone o repositório:
-   ```
-   git clone [https://github.com/DerBrasilianer/Challenge\_Java\_2025\_Sprint3.git](https://github.com/DerBrasilianer/Challenge_Java_2025_Sprint3.git)
-   cd Challenge\_Java\_2025\_Sprint3/challenge-sprint-1-java-advanced-main
-   ```
+A aplicação está publicada no Azure e pode ser acessada através da seguinte URL:
 
-2. Abra o projeto no **IntelliJ** (ou outra IDE compatível com Java 21).
+**[https://webapp-challenge-945-sprint3.azurewebsites.net](https://webapp-challenge-945-sprint3.azurewebsites.net)**
 
-3. Configure o banco Oracle no `application.properties` com usuário, senha e URL corretos.
+O deploy é feito automaticamente a cada `push` para a branch `main` via GitHub Actions.
 
-4. Rode a aplicação a partir da classe principal:
-   ""
-   com.fiap.gestaofrota.GestaoFrotaApplication
-   ""
-
-5. A aplicação ficará disponível em:
-   [http://localhost:8080](http://localhost:8080)
+#### 👤 Usuários para Teste
+* **Usuário:** `user`, **Senha:** `userpass` (Acesso padrão)
+* **Usuário:** `admin`, **Senha:** `adminpass` (Acesso de administrador)
 
 ---
 
-## 🛠️ Usuários para Teste
+## ⚙️ Como Rodar Localmente
 
-* **user, userpass (usuário padrão)**
-* **admin, adminpass (usuário administrador)**
+#### Pré-requisitos
+* Java 21 (JDK)
+* Maven 3.x
+* IntelliJ IDEA ou outra IDE de sua preferência
 
----
+#### Passos
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/vinicius945/Challenge_Java_2025_Sprint3.git](https://github.com/vinicius945/Challenge_Java_2025_Sprint3.git)
+    cd Challenge_Java_2025_Sprint3
+    ```
 
-## 👀 Funcionalidades
+2.  **Abra o projeto** na sua IDE e aguarde o Maven baixar as dependências.
 
-* **CRUD de Motos:**
+3.  **Configure as Variáveis de Ambiente:**
+    Esta aplicação é configurada para ler as credenciais do banco de dados a partir de variáveis de ambiente, para maior segurança. Configure as seguintes variáveis na sua "Run Configuration" do IntelliJ:
 
-    * Criar, listar, editar e deletar motos
-    * Cada moto está associada a um Pátio
+    * `SPRING_DATASOURCE_USERNAME`: `leticia@sqlserver-challenge-945-sprint3`
+    * `SPRING_DATASOURCE_PASSWORD`: `AzureFest@2025`
 
-* **CRUD de Pátios:**
+4.  **Rode a Aplicação:**
+    Execute a aplicação a partir da classe principal `com.fiap.gestaofrota.GestaoFrotaApplication`.
 
-    * Criar, listar, editar e deletar pátios
-    * Um pátio pode ter várias motos
-
-* **CRUD de Usuários:**
-
-    * Registro de novos usuários
-    * Login e logout
-    * Validação de username único
-
-* **Interface web:**
-
-    * Templates Thymeleaf estilizados com Bootstrap e CSS
-    * Barra de navegação com login/logout
-
-* **API REST:**
-
-    * Endpoints para Motos (`/api/motos`)
-    * Endpoints para Pátios (`/api/patios`)
-    * Endpoints para Usuários via registro/login
-
-* **Segurança:**
-
-    * Login e registro de usuários
-    * Logout seguro
-    * Controle de acesso com roles
-
-* **Banco de dados:**
-
-    * Oracle DB com migrations Flyway
+5.  **Acesse a Aplicação:**
+    A aplicação ficará disponível localmente em: **http://localhost:8080**
 
 ---
+
+## 🏗️ Infraestrutura como Código (IaC) e Deploy
+
+A criação de todos os recursos no Azure e a configuração do deploy são feitas via linha de comando, conforme os requisitos da disciplina de DevOps.
+
+#### Criação da Infraestrutura (Azure CLI)
+O comando a seguir, executado no Cloud Shell, cria todos os recursos necessários (Grupo de Recursos, Servidor SQL, Banco, App Service, etc.):
+
+```bash
+RESOURCE_GROUP="rg-challenge-sprint3"; LOCATION="eastus2"; SQL_SERVER_NAME="sqlserver-challenge-945-sprint3"; SQL_DATABASE_NAME="sqlLTAKN"; ADMIN_USER="leticia"; ADMIN_PASSWORD="AzureFest@2025"; APPSERVICE_PLAN_NAME="plan-challenge-sprint3"; WEBAPP_NAME="webapp-challenge-945-sprint3"; JAVA_RUNTIME="JAVA:21-java21"; echo "Criando grupo de recursos..." && az group create --name $RESOURCE_GROUP --location $LOCATION && echo "Criando servidor SQL..." && az sql server create --name $SQL_SERVER_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --admin-user $ADMIN_USER --admin-password $ADMIN_PASSWORD && echo "Configurando firewall do SQL..." && az sql server firewall-rule create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 && echo "Criando banco de dados..." && az sql db create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name $SQL_DATABASE_NAME --service-objective S0 && echo "Criando plano de serviço..." && az appservice plan create --name $APPSERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP --sku B1 --is-linux && echo "Criando Web App..." && az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --plan $APPSERVICE_PLAN_NAME --runtime $JAVA_RUNTIME && echo "🚀 Tudo pronto! Seus recursos foram criados em East US 2."
 
 ## ⚙️ Deploy no Render
 
-### [Link do Deploy](https://challenge-java-2025-sprint3.onrender.com)
+
 
 ---
 
