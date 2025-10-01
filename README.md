@@ -103,10 +103,14 @@ Após a criação da infraestrutura, execute este comando no Cloud Shell para in
 
 Bash
 
+```bash
+
 az webapp config appsettings set \
     --resource-group rg-challenge-sprint3 \
     --name webapp-challenge-945-sprint3 \
     --settings "SPRING_DATASOURCE_USERNAME=leticia@sqlserver-challenge-945-sprint3" "SPRING_DATASOURCE_PASSWORD=AzureFest@2025"
+    
+```    
 Passo 3: Configuração e Ativação do Pipeline de CI/CD (Script Automatizado)
 Este passo é executado a partir do terminal local, na pasta do projeto. Ele utiliza um script para automatizar a criação da identidade de serviço no Azure, a configuração do segredo no GitHub e a geração do arquivo de workflow para o deploy.
 
