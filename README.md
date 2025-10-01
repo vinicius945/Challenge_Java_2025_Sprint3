@@ -259,7 +259,10 @@ Gere as Credenciais no Cloud Shell:
 
 Bash
 
+```bash
 az ad sp create-for-rbac --name "GitHub-Action-Deploy-Sprint3" --role "Contributor" --scopes "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-challenge-sprint3/providers/Microsoft.Web/sites/webapp-challenge-945-sprint3" --sdk-auth
+
+```
 Configure o Segredo no GitHub:
 
 Copie a saída JSON inteira do comando anterior.
