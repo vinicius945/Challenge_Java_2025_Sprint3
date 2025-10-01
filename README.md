@@ -98,6 +98,9 @@ O comando a seguir, executado no Cloud Shell, cria todos os recursos necessário
 RESOURCE_GROUP="rg-challenge-sprint3"; LOCATION="eastus2"; SQL_SERVER_NAME="sqlserver-challenge-945-sprint3"; SQL_DATABASE_NAME="sqlLTAKN"; ADMIN_USER="leticia"; ADMIN_PASSWORD="AzureFest@2025"; APPSERVICE_PLAN_NAME="plan-challenge-sprint3"; WEBAPP_NAME="webapp-challenge-945-sprint3"; JAVA_RUNTIME="JAVA:21-java21"; echo "Criando grupo de recursos..." && az group create --name $RESOURCE_GROUP --location $LOCATION && echo "Criando servidor SQL..." && az sql server create --name $SQL_SERVER_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --admin-user $ADMIN_USER --admin-password $ADMIN_PASSWORD && echo "Configurando firewall do SQL..." && az sql server firewall-rule create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 && echo "Criando banco de dados..." && az sql db create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name $SQL_DATABASE_NAME --service-objective S0 && echo "Criando plano de serviço..." && az appservice plan create --name $APPSERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP --sku B1 --is-linux && echo "Criando Web App..." && az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --plan $APPSERVICE_PLAN_NAME --runtime $JAVA_RUNTIME && echo "🚀 Tudo pronto! Seus recursos foram criados em East US 2."
 
 ```
+
+Crie as tabelas no banco de dados, a criação está no script.sql
+
 Passo 2: Configuração das Variáveis de Ambiente no App Service
 Após a criação da infraestrutura, execute este comando no Cloud Shell para injetar as credenciais do banco de dados de forma segura no App Service.
 
@@ -109,7 +112,7 @@ az webapp config appsettings set \
     --resource-group rg-challenge-sprint3 \
     --name webapp-challenge-945-sprint3 \
     --settings "SPRING_DATASOURCE_USERNAME=leticia@sqlserver-challenge-945-sprint3" "SPRING_DATASOURCE_PASSWORD=AzureFest@2025"
-    
+
 ```    
 Passo 3: Configuração e Ativação do Pipeline de CI/CD (Script Automatizado)
 Este passo é executado a partir do terminal local, na pasta do projeto. Ele utiliza um script para automatizar a criação da identidade de serviço no Azure, a configuração do segredo no GitHub e a geração do arquivo de workflow para o deploy.
@@ -203,6 +206,9 @@ chmod +x setup-deploy.sh
 
 ```
 
+A partir deste ponto, o workflow de CI/CD estará configurado e o primeiro deploy será iniciado.
+
+
 Depois teste o link:
 
 ### [Link do daaplicação em nuvem] webapp-challenge-945-sprint3.azurewebsites.net
@@ -244,4 +250,26 @@ A partir deste ponto, o workflow de CI/CD estará configurado e o primeiro deplo
 
 ## 📽️ Vídeo de demonstração
 
-### [[[Link do vídeo](https://youtu.be/ckQmOTrJXrQ)](https://youtu.be/qjdKAtLK4q4)](https://youtu.be/qjdKAtLK4q4)
+### [[[Link do vídeo](https://youtu.be/ckQmOTrJXrQ)](https://youtu.be/qjdKAtLK4q4)]
+
+🔍 Solução de Problemas (Troubleshooting)
+Caso o script setup-deploy.sh ou o deploy automático falhe por algum motivo (ex: GitHub CLI não instalado, problemas de permissão), a configuração de autenticação entre o GitHub e o Azure pode ser feita manualmente:
+
+Gere as Credenciais no Cloud Shell:
+
+Bash
+
+az ad sp create-for-rbac --name "GitHub-Action-Deploy-Sprint3" --role "Contributor" --scopes "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/rg-challenge-sprint3/providers/Microsoft.Web/sites/webapp-challenge-945-sprint3" --sdk-auth
+Configure o Segredo no GitHub:
+
+Copie a saída JSON inteira do comando anterior.
+
+No seu repositório GitHub, vá em Settings > Secrets and variables > Actions.
+
+Crie um novo segredo com o nome AZURE_CREDENTIALS e cole o JSON como valor.
+
+Remova segredos antigos (AZUREAPPSERVICE_...) para evitar conflitos.
+
+Crie/Atualize o Arquivo de Workflow (.yml):
+
+Garanta que seu arquivo .github/workflows/deploy.yml utilize este método de login, como mostrado no script setup-deploy.sh.
