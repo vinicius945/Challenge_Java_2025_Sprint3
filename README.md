@@ -43,7 +43,7 @@ O projeto utiliza:
 
 A aplicação está publicada no Azure e pode ser acessada através da seguinte URL:
 
-**[https://webapp-challenge-945-sprint3.azurewebsites.net](https://webapp-challenge-945-sprint3.azurewebsites.net)**
+**[webapp-challenge-945-sprint3.azurewebsites.net)**
 
 O deploy é feito automaticamente a cada `push` para a branch `main` via GitHub Actions.
 
