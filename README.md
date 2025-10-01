@@ -192,10 +192,16 @@ echo "✅ Tudo pronto! O deploy será disparado automaticamente via GitHub Actio
 ```
 Execute o script:
 
-
+```bash
 
 chmod +x setup-deploy.sh
 ./setup-deploy.sh
+
+```
+
+Depois teste o link:
+
+### [Link do daaplicação em nuvem] webapp-challenge-945-sprint3.azurewebsites.net
 
 A partir deste ponto, o workflow de CI/CD estará configurado e o primeiro deploy será iniciado.
 
