@@ -29,5 +29,5 @@ jobs:
       with: 
         app-name: 'webapp-challenge-945-sprint3'
         slot-name: ''
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e8ec94d7242d4064adf78927d0c340c4 }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: '${{ github.workspace }}/target/*.jar'
