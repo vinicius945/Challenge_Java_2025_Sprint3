@@ -109,6 +109,14 @@ flowchart LR
         C[GitHub Actions]
     end
 
+flowchart LR
+    subgraph GitHub
+        B[Repositório Git]
+        C[GitHub Actions]
+        B -- "1. git push / commit" --> C
+        C -- "2. Build & Deploy" --> D
+    end
+
     subgraph "Nuvem Azure"
         D[App Service<br>webapp-challenge-945-sprint3]
         E[Azure SQL Database<br>sqlLTAKN]
@@ -117,13 +125,10 @@ flowchart LR
 
     subgraph Cliente
         F[Usuário Final<br>(Navegador)]
+        F -- "3. Acessa aplicação (HTTPS)" --> D
+        D -- "4. Resposta HTTPS" --> F
     end
 
-    A[Desenvolvedor] -- "1. git push" --> B
-    B -- "2. Dispara Workflow (Gatilho)" --> C
-    C -- "3. Build & Deploy" --> D
-    F -- "4. Acessa a Aplicação (HTTPS)" --> D
-    D -- "5. Resposta HTTPS" --> F
 
 
 ```bash
