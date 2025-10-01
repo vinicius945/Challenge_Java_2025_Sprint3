@@ -91,44 +91,17 @@ A criação de todos os recursos no Azure e a configuração do deploy são feit
 O comando a seguir, executado no Cloud Shell, cria todos os recursos necessários (Grupo de Recursos, Servidor SQL, Banco, App Service, etc.):
 
 
-###Arquitetura
 
-# Arquitetura do Projeto
-
-```mermaid
-flowchart LR
-    classDef github fill:#f5f5f5,stroke:#24292f,stroke-width:2px,color:#24292f;
-    classDef azure fill:#0078d4,stroke:#005a9e,stroke-width:2px,color:white;
-    classDef client fill:#e5f3ff,stroke:#0078d4,stroke-width:2px,color:#0078d4;
-
-    subgraph GitHub
-        B[Repositório Git]:::github
-        C[GitHub Actions]:::github
-        B -- "1. git push / commit" --> C
-        C -- "2. Build & Deploy" --> D
-    end
-
-    subgraph "Nuvem Azure"
-        D[App Service<br>webapp-challenge-945-sprint3]:::azure
-        E[Azure SQL Database<br>sqlLTAKN]:::azure
-        D ---|Conexão segura (TCP/443)| E
-    end
-
-    subgraph Cliente
-        F[Usuário Final<br>(Navegador)]:::client
-        F -- "3. Acessa aplicação (HTTPS)" --> D
-        D -- "4. Resposta HTTPS" --> F
-    end
-```
 
 ```bash
 RESOURCE_GROUP="rg-challenge-sprint3"; LOCATION="eastus2"; SQL_SERVER_NAME="sqlserver-challenge-945-sprint3"; SQL_DATABASE_NAME="sqlLTAKN"; ADMIN_USER="leticia"; ADMIN_PASSWORD="AzureFest@2025"; APPSERVICE_PLAN_NAME="plan-challenge-sprint3"; WEBAPP_NAME="webapp-challenge-945-sprint3"; JAVA_RUNTIME="JAVA:21-java21"; echo "Criando grupo de recursos..." && az group create --name $RESOURCE_GROUP --location $LOCATION && echo "Criando servidor SQL..." && az sql server create --name $SQL_SERVER_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --admin-user $ADMIN_USER --admin-password $ADMIN_PASSWORD && echo "Configurando firewall do SQL..." && az sql server firewall-rule create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 && echo "Criando banco de dados..." && az sql db create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name $SQL_DATABASE_NAME --service-objective S0 && echo "Criando plano de serviço..." && az appservice plan create --name $APPSERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP --sku B1 --is-linux && echo "Criando Web App..." && az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --plan $APPSERVICE_PLAN_NAME --runtime $JAVA_RUNTIME && echo "🚀 Tudo pronto! Seus recursos foram criados em East US 2."
 
-## ⚙️ Deploy no Render
+###Arquitetura
 
+# Arquitetura do Projeto
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/37aa7ebe-6ac2-4a7f-82a9-c2f0d8cb4c23" />
 
----
 
 ## 📸 Prints de tela
 
@@ -157,4 +130,4 @@ RESOURCE_GROUP="rg-challenge-sprint3"; LOCATION="eastus2"; SQL_SERVER_NAME="sqls
 
 ## 📽️ Vídeo de demonstração
 
-### [Link do vídeo](https://youtu.be/ckQmOTrJXrQ)
+### [[[Link do vídeo](https://youtu.be/ckQmOTrJXrQ)](https://youtu.be/qjdKAtLK4q4)](https://youtu.be/qjdKAtLK4q4)
