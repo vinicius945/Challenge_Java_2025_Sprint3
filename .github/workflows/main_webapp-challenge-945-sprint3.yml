@@ -1,33 +1,35 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: 'Build and deploy JAR app to Azure Web App: webapp-challenge-945-sprint3'
+name: Build and Deploy to Azure Web App
 
 on:
   push:
     branches:
-    - main
+      - main
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v2
-    
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Java version
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v4
       with:
         java-version: '21'
-    
+        distribution: 'temurin'
+
     - name: Build with Maven
       run: mvn clean install
 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with: 
+      uses: azure/webapps-deploy@v3
+      with:
         app-name: 'webapp-challenge-945-sprint3'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f94295dfb7154915a63ffae6a62c48d0 }}
         package: '${{ github.workspace }}/target/*.jar'
