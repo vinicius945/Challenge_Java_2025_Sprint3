@@ -277,3 +277,4 @@ Crie/Atualize o Arquivo de Workflow (.yml):
 
 Garanta que seu arquivo .github/workflows/deploy.yml utilize este método de login, como mostrado no script setup-deploy.sh.
 # Atualização forçada de deploy
+# Atualização forçada de deploy
