@@ -97,26 +97,34 @@ graph LR
     subgraph "Ambiente Local"
         A[Desenvolvedor]
     end
+flowchart LR
+    subgraph GitHub
+        B[Repositório Git]
+        C[GitHub Actions]
+    end
 
-    subgraph "GitHub"
+flowchart LR
+    subgraph GitHub
         B[Repositório Git]
         C[GitHub Actions]
     end
 
     subgraph "Nuvem Azure"
-        D[App Service <br> webapp-challenge-945-sprint3]
-        E[Azure SQL Database <br> sqlLTAKN]
-        D --- E
+        D[App Service<br>webapp-challenge-945-sprint3]
+        E[Azure SQL Database<br>sqlLTAKN]
+        D ---|Conexão segura (TCP/443)| E
     end
 
-    subgraph "Cliente"
-        F[Usuário Final <br> (Navegador)]
+    subgraph Cliente
+        F[Usuário Final<br>(Navegador)]
     end
 
-    A -- "1. git push" --> B
+    A[Desenvolvedor] -- "1. git push" --> B
     B -- "2. Dispara Workflow (Gatilho)" --> C
     C -- "3. Build & Deploy" --> D
     F -- "4. Acessa a Aplicação (HTTPS)" --> D
+    D -- "5. Resposta HTTPS" --> F
+
 
 ```bash
 RESOURCE_GROUP="rg-challenge-sprint3"; LOCATION="eastus2"; SQL_SERVER_NAME="sqlserver-challenge-945-sprint3"; SQL_DATABASE_NAME="sqlLTAKN"; ADMIN_USER="leticia"; ADMIN_PASSWORD="AzureFest@2025"; APPSERVICE_PLAN_NAME="plan-challenge-sprint3"; WEBAPP_NAME="webapp-challenge-945-sprint3"; JAVA_RUNTIME="JAVA:21-java21"; echo "Criando grupo de recursos..." && az group create --name $RESOURCE_GROUP --location $LOCATION && echo "Criando servidor SQL..." && az sql server create --name $SQL_SERVER_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --admin-user $ADMIN_USER --admin-password $ADMIN_PASSWORD && echo "Configurando firewall do SQL..." && az sql server firewall-rule create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 && echo "Criando banco de dados..." && az sql db create --resource-group $RESOURCE_GROUP --server $SQL_SERVER_NAME --name $SQL_DATABASE_NAME --service-objective S0 && echo "Criando plano de serviço..." && az appservice plan create --name $APPSERVICE_PLAN_NAME --resource-group $RESOURCE_GROUP --sku B1 --is-linux && echo "Criando Web App..." && az webapp create --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --plan $APPSERVICE_PLAN_NAME --runtime $JAVA_RUNTIME && echo "🚀 Tudo pronto! Seus recursos foram criados em East US 2."
