@@ -250,7 +250,7 @@ A partir deste ponto, o workflow de CI/CD estará configurado e o primeiro deplo
 
 ## 📽️ Vídeo de demonstração
 
-### [[[Link do vídeo](https://youtu.be/ckQmOTrJXrQ)](https://youtu.be/qjdKAtLK4q4)]
+### [[[Link do vídeo](https://youtu.be/H1mf6x-qlwE?si=pXwIu9y9CzuiihP5)]]
 
 🔍 Solução de Problemas (Troubleshooting)
 Caso o script setup-deploy.sh ou o deploy automático falhe por algum motivo (ex: GitHub CLI não instalado, problemas de permissão), a configuração de autenticação entre o GitHub e o Azure pode ser feita manualmente:
@@ -276,5 +276,3 @@ Remova segredos antigos (AZUREAPPSERVICE_...) para evitar conflitos.
 Crie/Atualize o Arquivo de Workflow (.yml):
 
 Garanta que seu arquivo .github/workflows/deploy.yml utilize este método de login, como mostrado no script setup-deploy.sh.
-# Atualização forçada de deploy
-# Atualização forçada de deploy
